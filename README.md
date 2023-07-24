@@ -1,2 +1,2 @@
 # ProgFormer-main
-a prognosis prediction code for breast cancer based on transformer
+a prognosis prediction code for breast cancer
