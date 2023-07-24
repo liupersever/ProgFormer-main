@@ -47,23 +47,15 @@ class DiffAttention(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, queries, keys, values):
-        # print('*'*50)
-        # print('keys',keys.shape)
+
         d = torch.einsum("nhm,lhm->nlh", queries, keys)
-        # print('d',d.shape)
         attention_num = torch.sigmoid(torch.einsum("nhm,lhm->nlh", queries, keys))
         all_ones = torch.ones([keys.shape[0]]).to(keys.device)
         attention_normalizer = torch.einsum("nlh,l->nh", attention_num, all_ones)
-        # print('atten_norm1',attention_normalizer.shape)
         attention_normalizer = attention_normalizer.unsqueeze(1).repeat(1, keys.shape[0], 1)
-        # print('atten_norm2', attention_normalizer.shape)
         attention = attention_num / attention_normalizer
-        # print('atten',attention.shape)
-
         attention = self.dropout(attention)
         attn_output = torch.einsum("nlh,lhd->nhd", attention, values)
-        # print('attn_output.shape',attn_output.shape)
-        # print('*' * 50)
         return attn_output
 
 
